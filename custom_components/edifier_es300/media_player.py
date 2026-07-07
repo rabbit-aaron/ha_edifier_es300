@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from homeassistant.components.media_player import (
     MediaPlayerDeviceClass,
     MediaPlayerEntity,
@@ -20,11 +18,24 @@ from . import ES300ConfigEntry
 from .coordinator import ES300DataUpdateCoordinator
 from .entity import ES300Entity
 
-SOURCES: dict[str, Source] = {source.name.lower(): source for source in Source}
-SOURCE_NAMES = {source.value: name for name, source in SOURCES.items()}
+# Display labels shown in the UI, mapped to the device enums. Insertion order
+# is the order shown in the source / sound-mode pickers.
+SOURCES: dict[str, Source] = {
+    "Bluetooth": Source.BLUETOOTH,
+    "AUX": Source.AUX,
+    "USB": Source.USB,
+    "AirPlay": Source.AIRPLAY,
+}
+SOURCE_NAMES = {source.value: label for label, source in SOURCES.items()}
 
-PRESETS: dict[str, EqPreset] = {preset.name.lower(): preset for preset in EqPreset}
-PRESET_NAMES = {preset.value: name for name, preset in PRESETS.items()}
+PRESETS: dict[str, EqPreset] = {
+    "Classic": EqPreset.CLASSIC,
+    "Monitor": EqPreset.MONITOR,
+    "Game": EqPreset.GAME,
+    "Vocal": EqPreset.VOCAL,
+    "Customized": EqPreset.CUSTOMIZED,
+}
+PRESET_NAMES = {preset.value: label for label, preset in PRESETS.items()}
 
 
 async def async_setup_entry(
@@ -70,6 +81,13 @@ class ES300MediaPlayer(ES300Entity, MediaPlayerEntity):
 
     @property
     def media_title(self) -> str | None:
+        # The ES300's two text slots are swapped relative to their names: `lyric`
+        # holds the track title and `song` holds the artist (confirmed in the
+        # Edifier app across all sources).
+        return self.coordinator.data.lyric or None
+
+    @property
+    def media_artist(self) -> str | None:
         return self.coordinator.data.song or None
 
     @property
@@ -87,10 +105,6 @@ class ES300MediaPlayer(ES300Entity, MediaPlayerEntity):
     @property
     def sound_mode(self) -> str | None:
         return PRESET_NAMES.get(self.coordinator.data.eq_selected_index)
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        return {"lyric": self.coordinator.data.lyric}
 
     async def async_set_volume_level(self, volume: float) -> None:
         level = round(volume * self.coordinator.data.max_volume)

@@ -11,8 +11,6 @@ from homeassistant.const import PERCENTAGE
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from edifier_es300.typing_ import BatteryStatus
-
 from . import ES300ConfigEntry
 from .coordinator import ES300DataUpdateCoordinator
 from .entity import ES300Entity
@@ -44,10 +42,3 @@ class ES300BatterySensor(ES300Entity, SensorEntity):
         if not battery:
             return None
         return battery.get("box")
-
-    @property
-    def extra_state_attributes(self) -> dict[str, bool]:
-        battery = self.coordinator.data.battery
-        if not battery:
-            return {}
-        return {"charging": battery.get("status") == BatteryStatus.CONNECTED}
