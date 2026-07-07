@@ -1,0 +1,32 @@
+name: Release
+
+# HACS installs integrations from GitHub Releases, not bare tags. This turns
+# every pushed version tag (created by `bump-my-version`) into a Release.
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify tag matches manifest version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          manifest="$(python3 -c "import json; print(json.load(open('custom_components/edifier_es300/manifest.json'))['version'])")"
+          if [ "$tag" != "$manifest" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} (${tag}) does not match manifest version ${manifest}"
+            exit 1
+          fi
+          echo "version OK: ${manifest}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "${GITHUB_REF_NAME}" --title "${GITHUB_REF_NAME}" --generate-notes
