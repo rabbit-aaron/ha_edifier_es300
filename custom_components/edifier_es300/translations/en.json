@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Edifier ES300",
+        "description": "Enter the speaker's host and port, or leave the host blank to auto-discover speakers on your network.",
+        "data": {
+          "host": "Host",
+          "port": "Port"
+        }
+      },
+      "pick": {
+        "title": "Select speaker",
+        "description": "Several speakers were found. Choose one to add.",
+        "data": {
+          "device": "Speaker"
+        }
+      }
+    },
+    "error": {
+      "no_devices_found": "No ES300 speakers were found. Make sure you're on the same Wi-Fi as the speaker, or enter its host manually."
+    },
+    "abort": {
+      "already_configured": "This speaker is already configured."
+    }
+  }
+}
