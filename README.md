@@ -19,7 +19,7 @@ PyPI package.
 
 ### HACS (recommended)
 
-[![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=aaronz&repository=ha_edifier_es300&category=integration)
+[![Open your Home Assistant instance and open this repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=rabbit-aaron&repository=ha_edifier_es300&category=integration)
 
 Click the button above to add this repository to [HACS](https://hacs.xyz), then
 install **Edifier ES300** and restart Home Assistant.
